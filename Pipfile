@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+
+[packages]
+django = "*"
+psycopg2-binary = "*"
+djangorestframework = ">=3.9,<3.10"
+requests = "*"
+drf-nested-routers = "*"
+drf-yasg = "*"
+pydantic = "*"
+packaging = "*"
+
+[requires]
+python_version = "3.7"

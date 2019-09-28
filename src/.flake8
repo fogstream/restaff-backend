@@ -1,0 +1,5 @@
+[flake8]
+exclude = .git,__pycache__,poc_scripts,migrations,settings
+ignore = A002, W503
+application-import-names = exrest, tests
+import-order-style = pep8

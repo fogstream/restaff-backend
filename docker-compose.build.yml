@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - postgres
+      - redis
+    links:
+     - postgres
+     - redis
+    env_file:
+      - .env
+    volumes:
+      - app_static:/application/static
+      - app_media:/application/media
+    command: start_server.sh
+
+
+volumes:
+  app_media:
+  app_static:
