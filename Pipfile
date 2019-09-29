@@ -15,6 +15,8 @@ drf-nested-routers = "*"
 drf-yasg = "*"
 pydantic = "*"
 packaging = "*"
+uwsgi = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"

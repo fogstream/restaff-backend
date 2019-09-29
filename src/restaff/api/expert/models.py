@@ -55,7 +55,7 @@ class TodoListItem(models.Model):
     todo_list = models.ForeignKey(
         TodoList, on_delete=models.CASCADE, related_name='items')
     skill = models.ForeignKey(
-        Skill, on_delete=models.PROTECT)
+        Skill, on_delete=models.PROTECT, null=True, blank=True)
     name = models.CharField(
         _('name'), max_length=128)
     checked =  models.BooleanField(

@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.exceptions import NotFound
 
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ from restaff.core.base.serializers import PositionSerializer
 
 
 class ProfileView(APIView):
+    @swagger_auto_schema(responses={200: ProfileSerializer()})
     def get(self, request, *args, **kwargs):
         return JsonResponse(ProfileSerializer(
             instance=request.employee
@@ -20,6 +22,7 @@ class ProfileView(APIView):
 
 
 class SkillsView(APIView):
+    @swagger_auto_schema(responses={200: SkillSerializer(many=True)})
     def get(self, request):
         return JsonResponse(SkillSerializer(
             instance=Skill.objects.all(),
@@ -27,6 +30,7 @@ class SkillsView(APIView):
         ).data, safe=False)
 
 class SkillView(APIView):
+    @swagger_auto_schema(responses={200: SkillSerializer()})
     def get(self, request, skill_id):
         return JsonResponse(SkillSerializer(
             instance=get_object_or_404(
@@ -47,6 +51,7 @@ class SkillView(APIView):
 
 
 class OffersView(APIView):
+    @swagger_auto_schema(responses={200: OffersSerializer(many=True)})
     def get(self, request):
         qs = Vacancy.objects.filter(
             position__in=request.employee.subscribes.values('position')
@@ -57,6 +62,7 @@ class OffersView(APIView):
 
 
 class OffersOneView(APIView):
+    @swagger_auto_schema(responses={200: OffersSerializer()})
     def get(self, request, offer_id):
         offer = get_object_or_404(
             Vacancy.objects.all(), id=offer_id)
@@ -90,6 +96,7 @@ class PositionProposeView(APIView):
             raise NotFound()
 
 class PositionsView(APIView):
+    @swagger_auto_schema(responses={200: PositionSerializer(many=True)})
     def get(self, request):
         return JsonResponse(PositionSerializer(
             instance=Position.objects.all(),
@@ -98,6 +105,7 @@ class PositionsView(APIView):
 
 
 class PositionsOneView(APIView):
+    @swagger_auto_schema(responses={200: PositionSerializer()})
     def get(self, request, position_id:int):
         return JsonResponse(PositionSerializer(
             instance=get_object_or_404(

@@ -20,6 +20,7 @@ urlpatterns = [
     path('positions/<int:position_id>/staff_orders', views.PositionStaffOrdersView.as_view()),
     path('positions/<int:position_id>/proposes', views.PositionProposesView.as_view()),
     path('positions/<int:position_id>/padawan_progress', views.PositionPadawanProgress.as_view()),
+    path('proposes/<int:propose_id>/accept', views.PositionPadawanProgress.as_view()),
 
     path('experts', views.ExpertsView.as_view()),
     path('experts/<int:expert_id>/', views.ExpertsOneView.as_view()),

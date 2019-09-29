@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 
 from restaff.api.employee.models import Employee
 from restaff.api.expert.serializers import PadawanSeralizer
-from restaff.api.expert.models import StaffOrder, Training, TodoList
+from restaff.api.expert.models import StaffOrder, Training, TodoList, TodoListItem
 from restaff.core.base.serializers import TodoListSerializer, StaffOrderCreateSerializer
 
 
@@ -18,6 +19,7 @@ def padawans_queryset():
     )
 
 class Padawans(APIView):
+    @swagger_auto_schema(responses={200: PadawanSeralizer(many=True)})
     def get(self, request):
         padawans = Employee.objects.filter(
             trainings__expert=request.expert
@@ -28,6 +30,7 @@ class Padawans(APIView):
 
 
 class PadawansOne(APIView):
+    @swagger_auto_schema(responses={200: PadawanSeralizer()})
     def get(self, request, padawan_id:int):
         employee = get_object_or_404(
             Employee.objects.all().select_related(
@@ -43,6 +46,7 @@ class PadawansOne(APIView):
 
 
 class PadawanTodoListOne(APIView):
+    @swagger_auto_schema(responses={200: TodoListSerializer()})
     def get(self, request, padawan_id:int):
         todo_list = TodoList.objects.get(
             training__expert=request.expert,
@@ -58,8 +62,21 @@ class PadawanTodoListOne(APIView):
 
         return JsonResponse(todo_list_serializer.validated_data)
 
+class CheckTodoListItemView(APIView):
+    @swagger_auto_schema(responses={200: TodoListSerializer()})
+    def post(self, request, list_item_id:int):
+        todo_list_item:TodoListItem = get_object_or_404(
+            TodoListItem.objects.filter(),
+            id=list_item_id
+        )
+        todo_list_item.checked = True
+        todo_list_item.save()
+        return JsonResponse(TodoListSerializer(
+            instance=todo_list_item.todo_list
+        ).data)
 
 class StaffOrdersView(APIView):
+    @swagger_auto_schema(responses={200: StaffOrderCreateSerializer(many=True)})
     def get(self, request):
         return JsonResponse(data=StaffOrderCreateSerializer(
             instance=StaffOrder.objects.all(),
@@ -68,6 +85,7 @@ class StaffOrdersView(APIView):
 
 
 class StaffOrdersOneView(APIView):
+    @swagger_auto_schema(responses={200: StaffOrderCreateSerializer()})
     def get(self, request, staff_order_id):
         staff_order = get_object_or_404(
             StaffOrder.objects.all(),
@@ -77,7 +95,7 @@ class StaffOrdersOneView(APIView):
             instance=staff_order
         ).data)
 
-
+    @swagger_auto_schema(body=StaffOrderCreateSerializer)
     def post(self, request):
         serializer = StaffOrderCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
