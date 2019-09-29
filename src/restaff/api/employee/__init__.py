@@ -1,1 +1,1 @@
-__all__ = []
+default_app_config = 'restaff.api.employee.apps.EmployeeConfig'

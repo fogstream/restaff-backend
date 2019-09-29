@@ -1,13 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from restaff.api.employee.models import Employee
 from restaff.api.expert.serializers import Padawan
-from restaff.api.expert.models import StaffOrder
+from restaff.api.expert.models import StaffOrder, Trainig, TodoList
 from restaff.core.base.serializers import TodoListSerializer, StaffOrderCreateSerializer
-from restaff.core.trainings.models import Trainig, TodoList
 
 
 def padawans_queryset():

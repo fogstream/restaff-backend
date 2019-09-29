@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from restaff.api.employee.models import Employee, Propose
+from restaff.api.employee.models import Employee
+from restaff.api.hr.models import Propose
 from restaff.api.expert.models import Expert, StaffOrder
 from restaff.core.base.models import Position, Skill
 

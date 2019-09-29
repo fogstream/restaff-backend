@@ -6,14 +6,13 @@ from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 
-from restaff.api.employee.models import Employee, Propose
-from restaff.api.expert.models import Expert, StaffOrder
+from restaff.api.employee.models import Employee
+from restaff.api.expert.models import Expert, StaffOrder, TodoList
 from restaff.api.hr.serializers import StaffOrdersSerializer, WidgetVacancySerializer, EmployeesSerializer, \
     PositionStaffOrderSerializer, PositionProposesSerializer, PadawanProgressSerializer, ExpertSerializer
 from restaff.core.base.models import Position
-from restaff.api.hr.models import Vacancy
+from restaff.api.hr.models import Vacancy, Propose
 from restaff.core.base.serializers import TodoListSerializer, PositionSerializer
-from restaff.core.trainings.models import TodoList
 
 
 class StaffOrdersView(APIView):

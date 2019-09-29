@@ -1,3 +1,14 @@
 from django.contrib import admin
 
-# Register your models here.
+from restaff.api.hr.models import Hr, Vacancy
+
+
+@admin.register(Hr)
+class HrAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(Vacancy)
+class VacancyAdmin(admin.ModelAdmin):
+    ...
+

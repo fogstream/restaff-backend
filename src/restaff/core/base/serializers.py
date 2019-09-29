@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from restaff.core.base.models import Position, Skill
-from restaff.api.expert.models import StaffOrder, Requirement
-from restaff.core.trainings.models import TodoList, TodoListItem
+from restaff.api.expert.models import StaffOrder, Requirement, TodoList, TodoListItem
 
 
 class TodoListItemSerializer(serializers.ModelSerializer):

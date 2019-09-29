@@ -3,15 +3,14 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from restaff.core.base.models import Position, Skill
-from restaff.api.hr.models import Vacancy
 
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(
-        _('first_name'), max_length=128)
     last_name = models.CharField(
         _('last_name'), max_length=128)
+    first_name = models.CharField(
+        _('first_name'), max_length=128)
     surname = models.CharField(
         _('surname'), max_length=128)
     position = models.ForeignKey(
@@ -20,10 +19,9 @@ class Employee(models.Model):
         _('experience'), default=0)
     skills = models.ManyToManyField(Skill)
 
+    def __str__(self):
+        return f'{self.last_name} {self.first_name} {self.surname}'
 
-class Propose(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.PROTECT)
 
 class Subscribe(models.Model):
     position = models.ForeignKey(

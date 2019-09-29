@@ -21,22 +21,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         depth = 2
 
     def get_skills(self, employee):
-        return SkillSerializer(employee.skills.all()).data()
+        return SkillSerializer(employee.skills.all(), many=True).data
 
 
 class OffersSerializer(serializers.ModelSerializer):
-    vacancy_amount = serializers.SerializerMethodField()
     expert = serializers.SerializerMethodField()
 
     class Meta:
         model = Vacancy
         fields = '__all__'
         depth = 2
-
-    def get_vacancy_amount(self, position):
-        return position.vacancies.all().filter(active=True).aggregate(
-            amount=Sum('amount')
-        ).get('amount') or 0
 
     def get_expert(self, offer: Vacancy):
         if offer.staff_order:
