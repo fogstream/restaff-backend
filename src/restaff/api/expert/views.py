@@ -3,13 +3,13 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
 from restaff.api.employee.models import Employee
-from restaff.api.expert.serializers import Padawan
-from restaff.api.expert.models import StaffOrder, Trainig, TodoList
+from restaff.api.expert.serializers import PadawanSeralizer
+from restaff.api.expert.models import StaffOrder, Training, TodoList
 from restaff.core.base.serializers import TodoListSerializer, StaffOrderCreateSerializer
 
 
 def padawans_queryset():
-    return Trainig.objects.filter().annotate(
+    return Training.objects.filter().annotate(
         first_name='employee__first_name',
         last_name='employee__last_name',
         surname='employee__surname',
@@ -19,12 +19,12 @@ def padawans_queryset():
 
 class Padawans(APIView):
     def get(self, request):
-        padawans = padawans_queryset().filter(
-            expert=request.expert
+        padawans = Employee.objects.filter(
+            trainings__expert=request.expert
         )
-        return JsonResponse(data=[
-            Padawan(data=padawan).data for padawan in padawans
-        ])
+        return JsonResponse(PadawanSeralizer(
+            instance=padawans, many=True
+        ).data, safe=False)
 
 
 class PadawansOne(APIView):
@@ -34,7 +34,7 @@ class PadawansOne(APIView):
                 'position'
             ), pk=padawan_id
         )
-        return JsonResponse(data=Padawan(dict(
+        return JsonResponse(data=PadawanSeralizer(dict(
             first_name=employee.first_name,
             last_name=employee.last_name,
             surname=employee.surname,

@@ -11,7 +11,7 @@ class RoleObjectMiddleware(MiddlewareMixin):
         if request.path.startswith('/api/employees'):
             employee = Employee.objects.first()
             setattr(request, 'employee', employee)
-        if request.path.startswith('/api/employees'):
+        if request.path.startswith('/api/expert'):
             expert = Expert.objects.first()
             setattr(request, 'expert', expert)
         if request.path.startswith('/api/employees'):

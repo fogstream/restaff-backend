@@ -37,7 +37,7 @@ class Requirement(models.Model):
         return self.name
 
 
-class Trainig(models.Model):
+class Training(models.Model):
     expert = models.ForeignKey(
         Expert, on_delete=models.PROTECT, related_name='trainings')
     employee = models.ForeignKey(
@@ -48,12 +48,12 @@ class Trainig(models.Model):
 
 class TodoList(models.Model):
     training = models.OneToOneField(
-        Trainig, on_delete=models.CASCADE, related_name='todo_list')
+        Training, on_delete=models.CASCADE, related_name='todo_list')
 
 
 class TodoListItem(models.Model):
     todo_list = models.ForeignKey(
-        Position, on_delete=models.CASCADE, related_name='items')
+        TodoList, on_delete=models.CASCADE, related_name='items')
     skill = models.ForeignKey(
         Skill, on_delete=models.PROTECT)
     name = models.CharField(
