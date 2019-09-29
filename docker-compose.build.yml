@@ -19,6 +19,23 @@ services:
       - app_media:/application/media
     command: start_server.sh
 
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backups:/backups
+    env_file:
+      - .env
+    ports:
+      - "5436:5432"
+
+  redis:
+    image: redis:latest
+    expose:
+      - "6379"
+    ports:
+      - "6380:6379"
+    restart: always
 
 volumes:
   app_media:
