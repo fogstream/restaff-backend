@@ -21,7 +21,7 @@ class StaffOrdersView(APIView):
         qs = StaffOrder.objects.all()
         return JsonResponse(StaffOrdersSerializer(
             instance=qs, many=True
-        ).data)
+        ).data, safe=False)
 
 
 class StaffOrdersOne(APIView):
@@ -30,16 +30,21 @@ class StaffOrdersOne(APIView):
             StaffOrder.objects.all(), pk=staff_order_id)
         return JsonResponse(StaffOrdersSerializer(
             instance=obj
-        ))
+        ).data)
 
 
 class StaffOrderMakeDemand(APIView):
     def get(self, request, staff_order_id:int):
         obj: StaffOrder = get_object_or_404(
             StaffOrder.objects.all(), pk=staff_order_id)
-        for _ in repeat(obj, obj.amount):
-            Vacancy.objects.create(
-                staff_order=obj, position=obj.position)
+        Vacancy.objects.update_or_create(
+            staff_order=obj,
+            position=obj.position,
+            defaults={
+                'amount': obj.amount
+            }
+        )
+
         return JsonResponse({})
 
 
@@ -57,31 +62,30 @@ class WidgetStaffOrders(APIView):
         qs = StaffOrder.objects.all()
         return JsonResponse(StaffOrdersSerializer(
             instance=qs, many=True
-        ).data)
-
+        ).data, safe=False)
 
 
 class WidgetVacancyView(APIView):
-    def get(self):
+    def get(self, request):
         qs = Position.objects.filter(
         ).annotate(
             exists_count=Count('employees'),
             vacancy_count=Count('vacancies')
-        ).filter(vacancy_count__gte=0)
+        ).filter(vacancy_count__gt=0)
         return JsonResponse(WidgetVacancySerializer(
             instance=qs, many=True
-        ).data)
+        ).data, safe=False)
 
 class EmployeesView(APIView):
-    def get(self):
+    def get(self, request):
         return JsonResponse(EmployeesSerializer(
             instance=Employee.objects.all(),
             many=True
-        ).data)
+        ).data, safe=False)
 
 
 class EmployeesProfileView(APIView):
-    def get(self, employee_id):
+    def get(self, request, employee_id):
         return JsonResponse(EmployeesSerializer(
             instance=get_object_or_404(
                 Employee.objects.all(),
@@ -91,9 +95,9 @@ class EmployeesProfileView(APIView):
 
 
 class EmployeesTodoListView(APIView):
-    def get(self, request):
+    def get(self, request, employee_id):
         todo_list = TodoList.objects.filter(
-            training__employee=request.exmployee
+            training__employee__id=employee_id
         ).first()
         return JsonResponse(TodoListSerializer(
             instance=todo_list
@@ -105,7 +109,7 @@ class PositionsView(APIView):
         return JsonResponse(PositionSerializer(
             instance=Position.objects.all(),
             many=True
-        ).data)
+        ).data, safe=False)
 
 
 class PositionsOneView(APIView):
@@ -124,7 +128,7 @@ class PositionStaffOrdersView(APIView):
                 position_id=position_id,
                 archive=False
             ), many=True
-        ).data)
+        ).data, safe=False)
 
 
 class PositionProposesView(APIView):
@@ -135,16 +139,16 @@ class PositionProposesView(APIView):
         )
         return JsonResponse(PositionProposesSerializer(
             instance=qs, many=True
-        ))
+        ).data, safe=False)
 
 
 class PositionPadawanProgress(APIView):
     def get(self, request, position_id:int):
         return JsonResponse(PadawanProgressSerializer(
             instance=Employee.objects.filter(
-                trainings__vacancy__position_id=position_id
-            )
-        ))
+                trainings__vacancy__position_id=position_id,
+            ), many=True
+        ).data, safe=False)
 
 
 class ExpertsView(APIView):
@@ -152,7 +156,7 @@ class ExpertsView(APIView):
         return JsonResponse(ExpertSerializer(
             instance=Expert.objects.all(),
             many=True
-        ))
+        ).data, safe=False)
 
 
 class ExpertsOneView(APIView):
@@ -160,13 +164,13 @@ class ExpertsOneView(APIView):
         expert = get_object_or_404(Expert.objects.all(), pk=expert_id)
         return JsonResponse(ExpertSerializer(
             instance=expert
-        ))
+        ).data)
 
 
 class ExpertsOnePadawanProgressView(APIView):
     def get(self, request, expert_id:int):
         return JsonResponse(PadawanProgressSerializer(
-            Employee.objects.filter(
+            instance=Employee.objects.filter(
                 trainings__expert_id=expert_id
-            )
-        ))
+            ), many=True
+        ).data, safe=False)

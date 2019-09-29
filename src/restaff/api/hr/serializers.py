@@ -62,11 +62,11 @@ class PositionProposesSerializer(serializers.ModelSerializer):
 
 
 class PadawanProgressSerializer(serializers.ModelSerializer):
-    percent = serializers.IntegerField()
+    percent = serializers.SerializerMethodField()
 
     class Meta:
         model = Employee
-        fields = ('id', 'percent', 'employee')
+        fields = ('id', 'percent', 'last_name', 'first_name', 'surname')
         depth = 2
 
     def get_percent(self, obj):
